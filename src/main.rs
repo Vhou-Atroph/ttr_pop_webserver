@@ -25,7 +25,7 @@ fn index() -> HttpResponse {
 }
 
 fn get_population() -> (HashMap<String,u16>,u16) {
-    let pop = Population::PopAPI::new(ttr_api::makeclient().unwrap()).unwrap();
+    let pop = Population::PopAPI::new(ttr_api::makeclient()).unwrap();
     (pop.populationByDistrict,pop.totalPopulation)
 }
 

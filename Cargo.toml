@@ -6,6 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ttr_api = {path = "../ttr_api-rs", version = "1.0.0"}
+ttr_api = {path = "../ttr_api-rs", version = "1.1.0"}
 actix-web = "1.0.8"
 serde = {version = "1.0.137", features = ["derive"]}
