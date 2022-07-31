@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use actix_web::{web,App,HttpResponse,HttpServer};
-use ttr_api::Population;
+use ttr_api::population;
 
 fn main() {
     let server = HttpServer::new(|| {
@@ -25,7 +25,7 @@ fn index() -> HttpResponse {
 }
 
 fn get_population() -> (HashMap<String,u16>,u16) {
-    let pop = Population::PopAPI::new(ttr_api::makeclient()).unwrap();
+    let pop = population::PopAPI::new(ttr_api::makeclient()).unwrap();
     (pop.populationByDistrict,pop.totalPopulation)
 }
 
