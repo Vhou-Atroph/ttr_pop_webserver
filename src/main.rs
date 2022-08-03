@@ -24,24 +24,25 @@ fn index() -> HttpResponse {
     )
 }
 
-fn get_population() -> (HashMap<String,u16>,u16) {
+fn get_population() -> (HashMap<String,u16>,u16,HashMap<String,String>) {
     let pop = population::PopAPI::new(ttr_api::makeclient()).unwrap();
-    (pop.populationByDistrict,pop.totalPopulation)
+    (pop.populationByDistrict,pop.totalPopulation,pop.statusByDistrict)
 }
 
-fn pop_table(pop_dict:HashMap<String,u16>,tot:u16) -> String {
-    let mut resp: String = String::from(r#"<table style="border:2px solid;background-color:black;"><tr><td colspan=2 style="border:2px solid;background-color:white;">Population by District</td></tr>"#);
+fn pop_table(pop_dict:HashMap<String,u16>,tot:u16,stat:HashMap<String,String>) -> String {
+    let mut resp: String = String::from(r#"<table style="border:2px solid;background-color:black;"><tr><td colspan=3 style="border:2px solid;background-color:white;">Population by District</td></tr>"#);
     for (k,v) in pop_dict {
-        let vals = format!(r#"<tr><td style="border:1px solid;background-color:#dbdbdb;">{}</td><td style="border:1px solid;background-color:#dbdbdb;">{}</td></tr>"#,k,v);
+        let vals = format!(r#"<tr><td style="border:1px solid;background-color:#dbdbdb;">{}</td><td style="border:1px solid;background-color:#dbdbdb;">{}</td><td style="border:1px solid;background-color:#dbdbdb;">{}</td></tr>"#,k,v,stat.get(&k).unwrap());
         resp.push_str(&vals);
-    } let lastbox = format!(r#"<td style="border:1px solid;background-color:#dbdbdb;">Total</td><td style="border:1px solid;background-color:#dbdbdb;">{}</td></table>"#,tot);
+    } let lastbox = format!(r#"<td colspan=2 style="border:1px solid;background-color:#dbdbdb;">Total Population</td><td style="border:1px solid;background-color:#dbdbdb;">{}</td></table>"#,tot);
     resp.push_str(&lastbox);
     resp
 }
 
 fn pop_page() -> HttpResponse {
     let table = get_population();
-    let body = pop_table(table.0,table.1);
+    println!("{:?}",table);
+    let body = pop_table(table.0,table.1,table.2);
     HttpResponse::Ok()
     .content_type("text/html")
     .body(format!(r#"<html style="background-color:black;background-image:url(https://i.imgur.com/AB9sCpm.png);"><title>Population</title><center>{}</center></html>"#,body))
